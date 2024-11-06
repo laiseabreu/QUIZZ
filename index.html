@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz em JavaScript</title>
+    <link rel="stylesheet" href="styler.css">
+</head>
+<body>
+    <div class="container">
+        <div class="bolhas">
+            <span style="--i:11"></span>
+            <span style="--i:17"></span>
+            <span style="--i:25"></span>
+            <span style="--i:14"></span>
+            <span style="--i:2"></span>
+            <span style="--i:28"></span>
+            <span style="--i:1"></span>
+            <span style="--i:24"></span>
+            <span style="--i:13"></span>
+            <span style="--i:29"></span>
+            <span style="--i:27"></span>
+            <span style="--i:11"></span>
+        </div>      
+    </div>
+    <h1>Quiz de Perguntas</h1>
+    <div class="formulario">
+        <div class="questao" id="q1">
+            <label>Qual das alternativas a seguir declara uma variável em JavaScript?</label>
+            <br><br>
+            <div>
+                <input type="radio" name="q1" value="a"> var minhaVariavel <br>
+                <input type="radio" name="q1" value="b"> variable minhaVariavel<br>
+                <input type="radio" name="q1" value="c"> let: minhaVariavel <br>
+                <input type="radio" name="q1" value="d"> var: minhaVariavel<br>
+                <input type="radio" name="q1" value="e"> int minhaVariavel<br>
+            </div>
+            <button onclick="nextQuestion(1)">Confirmar</button>
+        </div>
+
+        <div class="questao" id="q2">
+            <label>Qual método é usado para adicionar um elemento ao final de uma array em JavaScript?</label>
+            <br><br>
+            <div>
+                <input type="radio" name="q2" value="a"> array.push() <br>
+                <input type="radio" name="q2" value="b"> array.add()<br>
+                <input type="radio" name="q2" value="c"> array.insert() <br>
+                <input type="radio" name="q2" value="d"> array.append()<br>
+                <input type="radio" name="q2" value="e"> array.end()<br>
+            </div>
+            <button onclick="nextQuestion(2)">Confirmar</button>
+            <button onclick="prevQuestion(1)">Voltar</button>
+        </div>
+
+        <div class="questao" id="q3">
+            <label>Qual dos seguintes valores é considerado "falsy" em JavaScript?</label>
+            <br><br>
+            <div>
+                <input type="radio" name="q3" value="a"> 0 <br>
+                <input type="radio" name="q3" value="b"> 1<br>
+                <input type="radio" name="q3" value="c"> []<br>
+                <input type="radio" name="q3" value="d"> {}<br>
+                <input type="radio" name="q3" value="e"> "true"<br>
+            </div>
+            <button onclick="nextQuestion(3)">Confirmar</button>
+            <button onclick="prevQuestion(2)">Voltar</button>
+        </div>
+
+        <div class="questao" id="q4">
+            <label>O que console.log(typeof null) retorna?</label>
+            <br><br>
+            <div>
+                <input type="radio" name="q4" value="a"> null <br>
+                <input type="radio" name="q4" value="b"> undefined<br>
+                <input type="radio" name="q4" value="c"> object<br>
+                <input type="radio" name="q4" value="d"> nullType<br>
+                <input type="radio" name="q4" value="e"> "true"<br>
+            </div>
+            <button onclick="nextQuestion(4)">Confirmar</button>
+            <button onclick="prevQuestion(3)">Voltar</button>
+        </div>
+
+        <div class="questao" id="q5">
+            <label>Qual dos métodos a seguir converte uma string em um número inteiro em JavaScript?</label>
+            <br><br>
+            <div>
+                <input type="radio" name="q5" value="a"> parseInt() <br>
+                <input type="radio" name="q5" value="b"> toString()<br>
+                <input type="radio" name="q5" value="c"> Number.parseDecimal()<br>
+                <input type="radio" name="q5" value="d"> Number.toInt()<br>
+                <input type="radio" name="q5" value="e"> parseFloat()<br>
+            </div>
+            <button onclick="nextQuestion(5)">Confirmar</button>
+            <button onclick="prevQuestion(4)">Voltar</button>
+        </div>
+    </div>
+
+    <div id="resultado" style="display: none;"></div>
+
+    <script>
+        let currentQuestion = 1;
+        const answers = {
+            q1: 'a', // Resposta correta para a questão 1
+            q2: 'a', // Resposta correta para a questão 2
+            q3: 'a', // Resposta correta para a questão 3
+            q4: 'c', // Resposta correta para a questão 4
+            q5: 'a'  // Resposta correta para a questão 5
+        };
+        const userAnswers = {};
+
+        // Mostrar a primeira questão
+        document.getElementById(`q${currentQuestion}`).style.display = 'block';
+
+        function nextQuestion(questionNumber) {
+            // Verifica se alguma opção foi selecionada
+            const radios = document.getElementsByName(`q${questionNumber}`);
+            const isChecked = Array.from(radios).some(radio => radio.checked);
+            if (!isChecked) {
+                alert("Por favor, selecione uma alternativa.");
+                return;
+            }
+
+            // Salva a resposta do usuário
+            userAnswers[`q${questionNumber}`] = document.querySelector(`input[name="q${questionNumber}"]:checked`).value;
+
+            // Esconde a questão atual
+            document.getElementById(`q${questionNumber}`).style.display = 'none';
+
+            // Avança para a próxima questão
+            currentQuestion++;
+            if (currentQuestion <= 5) {
+                document.getElementById(`q${currentQuestion}`).style.display = 'block';
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            let feedback = '';
+
+            for (let question in answers) {
+                if (userAnswers[question] === answers[question]) {
+                    score++;
+                    feedback += `Questão ${question.charAt(1)}: Correta!<br>`;
+                } else {
+                    feedback += `Questão ${question.charAt(1)}: Errada. A resposta correta era ${answers[question]}.<br>`;
+                }
+            }
+
+            const totalQuestions = Object.keys(answers).length;
+            const percentage = (score / totalQuestions) * 100;
+            feedback += `<br>Você acertou ${score} de ${totalQuestions} (${percentage.toFixed(2)}%).`;
+
+            document.getElementById('resultado').innerHTML = feedback;
+            document.getElementById('resultado').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
